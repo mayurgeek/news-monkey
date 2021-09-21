@@ -24,61 +24,43 @@ constructor(){
     }
 }   
 
+ updatenews = async()=>{
+    this.setState({loading:true})
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=e0e38307582e44d184f453e588cca5c4&page=${this.state.page}&pageSize=${this.props.pageSize}`
+   let data = await fetch(url)
+   let parseData = await data.json()
+
+   console.log(parseData.articles)
+   this.setState({articles:parseData.articles,
+       loading:false,}) 
+}
 
  async componentDidMount(){
-    this.setState({loading:true})
-     let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=e0e38307582e44d184f453e588cca5c4&page=1&pageSize=${this.props.pageSize}`
-    let data = await fetch(url)
-    let parseData = await data.json()
-
-    console.log(parseData.articles)
-    this.setState({articles:parseData.articles,
-        loading:false,}) 
+    this.setState({page: this.state.page + 1 ,})
+    this.updatenews()
 }
 
  handleclickprev =  async ()=>{
-    this.setState({loading:true})
-     this.setState({page: this.state.page - 1 ,})
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category${this.props.category}&apiKey=e0e38307582e44d184f453e588cca5c4&page${this.state.page - 1}&pageSize=${this.props.pageSize}`
-    let data = await fetch(url)
-    let parseData = await data.json()
-   
-    console.log(parseData.articles)
-    this.setState({
-       articles : parseData.articles,
-       loading:false,
-    })
+    this.setState({page: this.state.page - 1 ,})
+    this.updatenews()
 }
 
  handleclicknext = async ()=>{ 
-     this.setState({loading:true})
- if(this.state.page + 1 > Math.ceil(this.state.totalResults/this.props.pageSize)){
-  
-
- }else{ this.setState({page: this.state.page + 1 ,})
- let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category${this.props.category}&apiKey=e0e38307582e44d184f453e588cca5c4&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`
- let data = await fetch(url)
- let parseData = await data.json()
-
- console.log(parseData.articles)
- this.setState({
-    articles : parseData.articles,
-    totalResults:parseData.totalResults,
-    loading:false
-}) }
-
+    this.setState({page: this.state.page + 1 ,})
+    this.updatenews()
 }
 
     render() {
 
 return(
     <div className="container">
-        {this.state.loading === true ? <Spiner/> : <h2>NewsMonkey - Top HeadLines</h2> }
+        {this.state.loading === true ? <Spiner/> : <h3 className="text-center my-3 text-warning shadow bg-dark border border-warning rounded-pill py-2">NewsMonkey - Top HeadLines</h3> }
 
-  <div className="row row-cols-1 row-cols-md-3 g-4">
+  <div className="row">
       {!this.state.loading && this.state.articles.map((element)=>{
-            return <div className="col-xl-3 col-sm-4 my-3" key={element.url}>
-              <Newscard title={(element.title === null)?"No Title":element.title.slice(0,45)} description={(element.description === null)?"No Description":element.description.slice(0,85)} imgUrl={element.urlToImage} moreUrl={element.url} />
+            return <div className="col-xl-4 col-sm-6 my-2" key={element.url}>
+              <Newscard title={(element.title === null)?"No Title":element.title.slice(0,45)} description={(element.description === null)?"No Description":element.description.slice(0,85)} 
+              imgUrl={element.urlToImage} moreUrl={element.url} author={element.author} date={element.publishedAt} source={element.source.id} />
             </div>
         })}
         <div className="col-12 mt-3 d-flex justify-content-around">
