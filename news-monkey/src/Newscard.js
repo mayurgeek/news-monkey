@@ -7,7 +7,7 @@ export default class Newscard extends Component {
             <>
          
                 <div className="card border border-warning">
-                <span class="position-absolute top-0  translate-middle badge rounded bg-warning">{this.props.source===null?"Unknow-Source":this.props.source}</span>
+                <span className="position-absolute top-0  translate-middle badge rounded bg-warning">{this.props.source===null?"Unknow-Source":this.props.source}</span>
                     <img className="card-img-top " src={(this.props.imgUrl === null)? "https://cdn.crash.net/styles/large_article/s3/image_importer/MotoGP/2941521.0008.jpg?itok=08_5Vgsq":this.props.imgUrl} alt="Loading. .." />
                     <div className="card-body bg-dark text-light text-center">
                         <h5 className="card-title">{this.props.title}</h5>

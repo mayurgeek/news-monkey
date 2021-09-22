@@ -13,20 +13,23 @@ static propTypes = {
     category : PropTypes.string,
 }
     
-    
-constructor(){
-    super();
+ capitalizeFirstLetter = (string)=>{
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }   
+constructor(props){
+    super(props);
     this.state = {
         articles:[],
         loading:false,
         page:1,
         //totalResults:1
     }
+    document.title = `NewsMonkey ${this.capitalizeFirstLetter(this.props.category)} News`
 }   
 
  updatenews = async()=>{
     this.setState({loading:true})
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=e0e38307582e44d184f453e588cca5c4&page=${this.state.page}&pageSize=${this.props.pageSize}`
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=ca11b2052e3b42bba7272d1dfb6a45f0&page=${this.state.page}&pageSize=${this.props.pageSize}`
    let data = await fetch(url)
    let parseData = await data.json()
 
@@ -36,17 +39,19 @@ constructor(){
 }
 
  async componentDidMount(){
-    this.setState({page: this.state.page + 1 ,})
+   this.setState({page: this.state.page + 1 ,})
     this.updatenews()
 }
 
  handleclickprev =  async ()=>{
     this.setState({page: this.state.page - 1 ,})
+    console.log(this.state.page)
     this.updatenews()
 }
 
  handleclicknext = async ()=>{ 
     this.setState({page: this.state.page + 1 ,})
+    console.log(this.state.page)
     this.updatenews()
 }
 
@@ -54,7 +59,7 @@ constructor(){
 
 return(
     <div className="container">
-        {this.state.loading === true ? <Spiner/> : <h3 className="text-center my-3 text-warning shadow bg-dark border border-warning rounded-pill py-2">NewsMonkey - Top HeadLines</h3> }
+        {this.state.loading === true ? <Spiner/> : <h3 className="text-center my-3 text-warning shadow bg-dark border border-warning rounded-pill py-2">NewsMonkey - {this.props.category} Top HeadLines</h3> }
 
   <div className="row">
       {!this.state.loading && this.state.articles.map((element)=>{
